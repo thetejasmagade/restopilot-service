@@ -1,7 +1,7 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors'; // Import the CORS middleware
-import { userRouter } from './routes/userRoutes';
+import { userRouter } from './routes/userRoutes.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
