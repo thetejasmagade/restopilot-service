@@ -2,13 +2,16 @@ import express, { Request, Response } from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors'; // Import the CORS middleware
 import { userRouter } from './routes/userRoutes';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 
-// MongoDB URI and Database
-const uri = 'mongodb://localhost:27017';
-const dbName = 'restopilot';
+// MongoDB URI and Database (from environment)
+const uri = process.env.MONGODB_URI || '';
+const dbName = process.env.DB_NAME || 'restopilot';
 
 let db: any;
 
@@ -21,6 +24,10 @@ app.use(express.json()); // for parsing application/json
 // MongoDB Connection
 async function connectToDatabase() {
   try {
+    if (!uri) {
+      throw new Error('MONGODB_URI is not set in environment');
+    }
+
     const client = await MongoClient.connect(uri);
     console.log('MongoDB connected');
     db = client.db(dbName); // Set the db connection
