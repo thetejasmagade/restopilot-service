@@ -1,11 +1,11 @@
 import express, { Request, Response } from 'express';
 
-export const userRouter = (db: any) => {
+export const userRouter = (db) => {
   const router = express.Router();
   const usersCollection = db.collection('users');
 
   // GET all users
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (req, res) => {
     const { _id } = req.body;
     try {
       if (_id == '8433887822') {
@@ -20,7 +20,7 @@ export const userRouter = (db: any) => {
   });
 
   // POST create a new user
-  router.post('/', async (req: any, res: any) => {
+  router.post('/', async (req, res) => {
     const { mobile, password, user_type } = req.body;
 
     try {
@@ -57,7 +57,7 @@ export const userRouter = (db: any) => {
     }
   });
 
-  router.post('/get-tables-data', async (req: any, res: any) => {
+  router.post('/get-tables-data', async (req, res) => {
     const { mobile } = req.body;
 
     // Validate if mobile is provided
@@ -88,7 +88,7 @@ export const userRouter = (db: any) => {
     }
   });
 
-  router.post('/update-kot', async (req: any, res: any) => {
+  router.post('/update-kot', async (req, res) => {
     const { mobile, table_data_id, table_id, status, total_amt, order_type, items } = req.body;
 
     console.log(mobile, table_data_id, table_id, status, total_amt, order_type, items);
@@ -115,14 +115,14 @@ export const userRouter = (db: any) => {
       }
 
       // Find the table data by table_data_id
-      const tableDataEntry = table_data.find((tableDataItem: any) => tableDataItem.id === table_data_id);
+      const tableDataEntry = table_data.find((tableDataItem) => tableDataItem.id === table_data_id);
 
       if (!tableDataEntry) {
         return res.status(404).json({ message: 'Table data entry not found' });
       }
 
       // Find the table by table_id
-      const table = tableDataEntry.tables.find((tableItem: any) => tableItem.id === table_id);
+      const table = tableDataEntry.tables.find((tableItem) => tableItem.id === table_id);
 
       if (!table) {
         return res.status(404).json({ message: 'Table not found' });
@@ -162,7 +162,7 @@ export const userRouter = (db: any) => {
   });
 
 
-  router.post('/temp-save', async (req: any, res: any) => {
+  router.post('/temp-save', async (req, res) => {
     const { mobile, table_data_id, table_id, status } = req.body;
 
     console.log(mobile, table_data_id, table_id, status);
@@ -189,14 +189,14 @@ export const userRouter = (db: any) => {
       }
 
       // Find the table data by table_data_id
-      const tableDataEntry = table_data.find((tableDataItem: any) => tableDataItem.id === table_data_id);
+      const tableDataEntry = table_data.find((tableDataItem) => tableDataItem.id === table_data_id);
 
       if (!tableDataEntry) {
         return res.status(404).json({ message: 'Table data entry not found' });
       }
 
       // Find the table by table_id
-      const table = tableDataEntry.tables.find((tableItem: any) => tableItem.id === table_id);
+      const table = tableDataEntry.tables.find((tableItem) => tableItem.id === table_id);
 
       if (!table) {
         return res.status(404).json({ message: 'Table not found' });
@@ -226,7 +226,7 @@ export const userRouter = (db: any) => {
   });
 
 
-  router.post('/save-ebill', async (req: any, res: any) => {
+  router.post('/save-ebill', async (req, res) => {
     const { mobile, table_data_id, table_id, table_name, status, total_amt, order_type, items, payment_type, customer_info } = req.body;
 
     // console.log(mobile, table_data_id, table_id, table_name, status, total_amt, order_type, items, payment_type, customer_info);
@@ -253,14 +253,14 @@ export const userRouter = (db: any) => {
       }
 
       // Find the table data by table_data_id
-      const tableDataEntry = table_data.find((tableDataItem: any) => tableDataItem.id === table_data_id);
+      const tableDataEntry = table_data.find((tableDataItem) => tableDataItem.id === table_data_id);
 
       if (!tableDataEntry) {
         return res.status(404).json({ message: 'Table data entry not found' });
       }
 
       // Find the table by table_id
-      const table = tableDataEntry.tables.find((tableItem: any) => tableItem.id === table_id);
+      const table = tableDataEntry.tables.find((tableItem) => tableItem.id === table_id);
       console.log(user)
 
       if (!table) {
@@ -323,7 +323,7 @@ export const userRouter = (db: any) => {
     }
   });
 
-  router.post('/orders', async (req: any, res: any) => {
+  router.post('/orders', async (req, res) => {
     try {
       const { mobile, search, startDate, endDate, limit = 5, offset = 0 } = req.body;
       console.log("Mobile:", mobile);
@@ -343,15 +343,15 @@ export const userRouter = (db: any) => {
       let orders = user.orders || [];
 
       // Sort orders by created_at in descending order to get the latest first
-      orders.sort((a: any, b: any) =>
+      orders.sort((a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
 
       // Apply search filter (case-insensitive match on item names)
       if (search) {
         const searchRegex = new RegExp(search, 'i');
-        orders = orders.filter((order: { items: any[] }) =>
-          order.items.some((item: { value: string }) => searchRegex.test(item.value))
+        orders = orders.filter((order) =>
+          order.items.some((item) => searchRegex.test(item.value))
         );
       }
 
@@ -364,14 +364,14 @@ export const userRouter = (db: any) => {
         // Adjust end date to include the entire day
         end.setHours(23, 59, 59, 999);
 
-        orders = orders.filter((order: { created_at: string | number | Date }) => {
+        orders = orders.filter((order) => {
           const orderDate = new Date(order.created_at);
           return orderDate >= start && orderDate <= end;
         });
       }
 
       // Pagination: Apply limit and offset
-      const totalAmt = orders.reduce((total: number, order: any) => total + order.total_amt, 0)
+      const totalAmt = orders.reduce((total, order) => total + order.total_amt, 0)
       const totalItems = orders.length;  // Total number of items after filtering
       const totalPages = Math.ceil(totalItems / limit);  // Total pages available
       const paginatedOrders = orders.slice(offset, offset + limit); // Slice the orders array based on limit and offset

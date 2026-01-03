@@ -13,7 +13,7 @@ const port = Number(process.env.PORT) || 3000;
 const uri = process.env.MONGODB_URI || '';
 const dbName = process.env.DB_NAME || 'restopilot';
 
-let db: any;
+let db;
 
 // Middleware to handle CORS
 app.use(cors()); // Enable CORS for all routes
@@ -41,7 +41,7 @@ connectToDatabase().then(() => {
   // Add v1 prefix to all API routes
   app.use('/api/v1/users', userRouter(db)); // v1 added as the prefix for the 'users' route
 
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/', (req, res) => {
     res.send('Hello, World!');
   });
 
