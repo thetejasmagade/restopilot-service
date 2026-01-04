@@ -39,7 +39,7 @@ export const userRouter = (db) => {
         } else {
           // If mobile and password match, return the user info (excluding password)
           const { password: userPassword, kitchen_password: kitchenUserPassword, orders: orders, ...userInfo } = user;
-          console.log(userInfo);
+          // console.log(userInfo);
           return res.status(200).json(userInfo); // Return user data without password
         }
       } else {
@@ -48,7 +48,7 @@ export const userRouter = (db) => {
         } else {
           // If mobile and password match, return the user info (excluding password)
           const { password: userPassword, kitchen_password: kitchenUserPassword, filters: filters, items: items, table_data: tableData, orders: orders, ...userInfo } = user;
-          console.log(userInfo);
+          // console.log(userInfo);
           return res.status(200).json(userInfo); // Return user data without password
         }
       }
@@ -88,10 +88,58 @@ export const userRouter = (db) => {
     }
   });
 
+  // POST update table status (takes `status` from req.body)
+  router.post('/update-table-status', async (req, res) => {
+    const { mobile, table_data_id, table_id, status } = req.body;
+    console.log('HELLLO');
+    
+
+    if (!mobile) {
+      return res.status(400).json({ message: 'Mobile number is required' });
+    }
+
+    try {
+      const user = await usersCollection.findOne({ mobile });
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const { table_data } = user;
+      if (!table_data) {
+        return res.status(404).json({ message: 'Table data not found' });
+      }
+
+      const tableDataEntry = table_data.find((td) => td.id === table_data_id);
+      if (!tableDataEntry) {
+        return res.status(404).json({ message: 'Table data entry not found' });
+      }
+
+      const table = tableDataEntry.tables.find((t) => t.id === table_id);
+      if (!table) {
+        return res.status(404).json({ message: 'Table not found' });
+      }
+
+      table.status = status;
+
+      await usersCollection.updateOne(
+        { mobile },
+        { $set: { "table_data.$[elem].tables.$[table].status": status } },
+        { arrayFilters: [{ "elem.id": table_data_id }, { "table.id": table_id }] }
+      );
+
+      return res.status(200).json(tableDataEntry);
+    } catch (err) {
+      console.error('Error:', err);
+      res.status(500).json({ message: 'Error updating table status', error: err });
+    }
+  });
+
+  // Update KOT 
   router.post('/update-kot', async (req, res) => {
     const { mobile, table_data_id, table_id, status, total_amt, order_type, items } = req.body;
 
-    console.log(mobile, table_data_id, table_id, status, total_amt, order_type, items);
+    // console.log(mobile, table_data_id, table_id, status, total_amt, order_type, items);
 
     // Validate if mobile is provided
     if (!mobile) {
@@ -165,7 +213,7 @@ export const userRouter = (db) => {
   router.post('/temp-save', async (req, res) => {
     const { mobile, table_data_id, table_id, status } = req.body;
 
-    console.log(mobile, table_data_id, table_id, status);
+    // console.log(mobile, table_data_id, table_id, status);
 
     // Validate if mobile is provided
     if (!mobile) {
@@ -225,7 +273,6 @@ export const userRouter = (db) => {
     }
   });
 
-
   router.post('/save-ebill', async (req, res) => {
     const { mobile, table_data_id, table_id, table_name, status, total_amt, order_type, items, payment_type, customer_info } = req.body;
 
@@ -261,7 +308,7 @@ export const userRouter = (db) => {
 
       // Find the table by table_id
       const table = tableDataEntry.tables.find((tableItem) => tableItem.id === table_id);
-      console.log(user)
+      // console.log(user)
 
       if (!table) {
         return res.status(404).json({ message: 'Table not found' });
@@ -287,10 +334,13 @@ export const userRouter = (db) => {
       user.orders.push(orderEntry);
 
       // Reset table to default values
-      table.status = 0;
+      table.status = 2;
       table.total_amt = 0;
       table.items = [];
       table.order_type = 1;
+
+      console.log(table.status, '🔥🔥🔥');
+      
 
       // Update the database with the new orders array and reset table data
       await usersCollection.updateOne(
@@ -326,7 +376,7 @@ export const userRouter = (db) => {
   router.post('/orders', async (req, res) => {
     try {
       const { mobile, search, startDate, endDate, limit = 5, offset = 0 } = req.body;
-      console.log("Mobile:", mobile);
+      // console.log("Mobile:", mobile);
 
       if (!mobile) {
         return res.status(400).json({ message: 'Mobile number is required' });
@@ -334,7 +384,7 @@ export const userRouter = (db) => {
 
       // Find user by mobile number
       const user = await usersCollection.findOne({ mobile });
-      console.log("User:", user);
+      // console.log("User:", user);
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
