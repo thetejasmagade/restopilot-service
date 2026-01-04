@@ -91,8 +91,6 @@ export const userRouter = (db) => {
   // POST update table status (takes `status` from req.body)
   router.post('/update-table-status', async (req, res) => {
     const { mobile, table_data_id, table_id, status } = req.body;
-    console.log('HELLLO');
-    
 
     if (!mobile) {
       return res.status(400).json({ message: 'Mobile number is required' });
@@ -334,14 +332,13 @@ export const userRouter = (db) => {
       user.orders.push(orderEntry);
 
       // Reset table to default values
-      table.status = 2;
+      table.status = 3;
       table.total_amt = 0;
       table.items = [];
       table.order_type = 1;
 
-      console.log(table.status, '🔥🔥🔥');
-      
-
+      // console.log(table.status, '🔥🔥🔥');
+    
       // Update the database with the new orders array and reset table data
       await usersCollection.updateOne(
         { mobile },
