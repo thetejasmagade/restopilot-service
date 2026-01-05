@@ -134,7 +134,7 @@ export const userRouter = (db) => {
   });
 
   // Update KOT 
-  router.post('/update-kot', async (req, res) => {
+  router.post('/send-kot', async (req, res) => {
     const { mobile, table_data_id, table_id, status, total_amt, order_type, items } = req.body;
 
     // console.log(mobile, table_data_id, table_id, status, total_amt, order_type, items);
@@ -208,7 +208,7 @@ export const userRouter = (db) => {
   });
 
 
-  router.post('/temp-save', async (req, res) => {
+  router.post('/make-bill', async (req, res) => {
     const { mobile, table_data_id, table_id, status } = req.body;
 
     // console.log(mobile, table_data_id, table_id, status);
@@ -271,7 +271,7 @@ export const userRouter = (db) => {
     }
   });
 
-  router.post('/save-ebill', async (req, res) => {
+  router.post('/settle-save-bill', async (req, res) => {
     const { mobile, table_data_id, table_id, table_name, status, total_amt, order_type, items, payment_type, customer_info } = req.body;
 
     // console.log(mobile, table_data_id, table_id, table_name, status, total_amt, order_type, items, payment_type, customer_info);
