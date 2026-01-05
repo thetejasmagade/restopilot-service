@@ -2,7 +2,7 @@ import express from 'express';
 
 export const userRouter = (db) => {
   const router = express.Router();
-  const usersCollection = db.collection('users');
+  const usersCollection = db.collection('restaurant_data');
 
   // GET all users
   router.get('/', async (req, res) => {
