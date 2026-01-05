@@ -39,7 +39,7 @@ async function connectToDatabase() {
 
 connectToDatabase().then(() => {
   // Add v1 prefix to all API routes
-  app.use('/api/v1/users', restaurantRouter(db)); // v1 added as the prefix for the 'users' route
+  app.use('/api/v1/restaurants', restaurantRouter(db)); // v1 added as the prefix for the 'restaurant' route
 
   app.get('/', (req, res) => {
     res.send('Hello, World!');
