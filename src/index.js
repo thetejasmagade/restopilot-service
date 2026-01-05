@@ -1,7 +1,7 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors'; // Import the CORS middleware
-import { userRouter } from './routes/userRoutes.js';
+import { restaurantRouter } from './routes/restaurantRoutes.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -39,7 +39,7 @@ async function connectToDatabase() {
 
 connectToDatabase().then(() => {
   // Add v1 prefix to all API routes
-  app.use('/api/v1/users', userRouter(db)); // v1 added as the prefix for the 'users' route
+  app.use('/api/v1/users', restaurantRouter(db)); // v1 added as the prefix for the 'users' route
 
   app.get('/', (req, res) => {
     res.send('Hello, World!');

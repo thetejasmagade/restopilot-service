@@ -1,15 +1,15 @@
 import express from 'express';
 
-export const userRouter = (db) => {
+export const restaurantRouter = (db) => {
   const router = express.Router();
-  const usersCollection = db.collection('restaurant_data');
+  const restaurantCollection = db.collection('restaurant_data');
 
   // GET all users
   router.get('/', async (req, res) => {
     const { _id } = req.body;
     try {
       if (_id == '8433887822') {
-        const users = await usersCollection.find({}, { projection: { password: 0, kitchen_password: 0, _id: 0 } }).toArray();
+        const users = await restaurantCollection.find({}, { projection: { password: 0, kitchen_password: 0, _id: 0 } }).toArray();
         res.status(200).json(users);
       } else {
         res.status(401).json({ message: 'Unauthorized' });
@@ -25,7 +25,7 @@ export const userRouter = (db) => {
 
     try {
       // Find user by mobile number
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
 
       // If user doesn't exist
       if (!user) {
@@ -67,7 +67,7 @@ export const userRouter = (db) => {
 
     try {
       //   // Find user by mobile number
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
 
       //   // If user doesn't exist
       if (!user) {
@@ -97,7 +97,7 @@ export const userRouter = (db) => {
     }
 
     try {
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -120,7 +120,7 @@ export const userRouter = (db) => {
 
       table.status = status;
 
-      await usersCollection.updateOne(
+      await restaurantCollection.updateOne(
         { mobile },
         { $set: { "table_data.$[elem].tables.$[table].status": status } },
         { arrayFilters: [{ "elem.id": table_data_id }, { "table.id": table_id }] }
@@ -146,7 +146,7 @@ export const userRouter = (db) => {
 
     try {
       // Find user by mobile number
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
 
       // If user doesn't exist
       if (!user) {
@@ -181,7 +181,7 @@ export const userRouter = (db) => {
       table.items = items; // Assuming `items` comes as an array with updated data
 
       // Update the table data in the database
-      await usersCollection.updateOne(
+      await restaurantCollection.updateOne(
         { mobile },
         {
           $set: {
@@ -220,7 +220,7 @@ export const userRouter = (db) => {
 
     try {
       // Find user by mobile number
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
 
       // If user doesn't exist
       if (!user) {
@@ -252,7 +252,7 @@ export const userRouter = (db) => {
       table.status = status;
 
       // Update the table data in the database
-      await usersCollection.updateOne(
+      await restaurantCollection.updateOne(
         { mobile },
         { $set: { "table_data.$[elem].tables.$[table].status": status, } },
         {
@@ -283,7 +283,7 @@ export const userRouter = (db) => {
 
     try {
       // Find user by mobile number
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
 
       // If user doesn't exist
       if (!user) {
@@ -340,7 +340,7 @@ export const userRouter = (db) => {
       // console.log(table.status, '🔥🔥🔥');
     
       // Update the database with the new orders array and reset table data
-      await usersCollection.updateOne(
+      await restaurantCollection.updateOne(
         { mobile },
         {
           $set: {
@@ -380,7 +380,7 @@ export const userRouter = (db) => {
       }
 
       // Find user by mobile number
-      const user = await usersCollection.findOne({ mobile });
+      const user = await restaurantCollection.findOne({ mobile });
       // console.log("User:", user);
 
       if (!user) {
